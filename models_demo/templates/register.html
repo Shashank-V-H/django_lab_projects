@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<head>
+    <title>Register Student to Course</title>
+</head>
+<body>
+    <h2>Register Student</h2>
+    <form method="post" action="{% url 'register' %}">
+        {% csrf_token %}
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" maxlength="50" required>
+        <br>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        <br>
+        <label for="course">Select Course:</label>
+        <select id="course" name="course" required>
+            {% for course in courses %}
+                <option value="{{ course.id }}">{{ course.title }}</option>
+            {% endfor %}
+        </select>
+        <br>
+        <button type="submit">Register</button>
+    </form>
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                 <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <!-- Let the students view who all opted for particular course by selecting the course -->
+
+    <form id="redirectForm" method="get" onsubmit="redirectToRegisteredStudents(event)">
+        <label for="course_title">Enter Course Title:</label>
+        <input type="text" id="course_title" name="course_title" required>
+        <button type="submit">Go</button>
+    </form>
+
+    <script>
+        function redirectToRegisteredStudents(event) {
+            event.preventDefault(); // Prevent the default form submission
+            var courseTitle = document.getElementById('course_title').value;
+            if (courseTitle) {
+                // Encode the course title to be URL safe
+                var encodedCourseTitle = encodeURIComponent(courseTitle);
+                // Redirect to the desired URL
+                window.location.href = '/registered/' + encodedCourseTitle + '/';
+            }
+        }
+    </script>
+</body>
+</html>
+
+</body>
+</html>
+       
