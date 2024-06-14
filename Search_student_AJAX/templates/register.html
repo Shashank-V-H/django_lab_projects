@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<head>
+    <title>Register Student to Course</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h2>Register Student</h2>
+    <form id="registerForm">
+        {% csrf_token %}
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" maxlength="50" required>
+        <br>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        <br>
+        <label for="course">Select Course:</label>
+        <select id="course" name="course" required>
+            {% for course in courses %}
+                <option value="{{ course.id }}">{{ course.title }}</option>
+            {% endfor %}
+        </select>
+        <br>
+        <button type="submit">Register</button>
+    </form>
+    <div id="registerResult"></div>
+
+
+ <!-- Let the students view who all opted for particular course by selecting the course -->
+
+    <form id="redirectForm" method="get" onsubmit="redirectToRegisteredStudents(event)">
+        <label for="course_title">Enter Course Title:</label>
+        <input type="text" id="course_title" name="course_title" required>
+        <button type="submit">Go</button>
+    </form>
+    
+    <!-- Search for a student to view their courses -->
+    <h2>Search Student's Enrolled Courses</h2>
+    <form id="searchForm">
+        {% csrf_token %}
+        <label for="student_name_search">Enter Student Name:</label>
+        <input type="text" id="student_name_search" name="student_name_search" required>
+        <button type="submit">Search</button>
+    </form>
+    <div id="searchResult"></div>
+
+    <script>
+        // AJAX for registration
+        $('#registerForm').submit(function(event) {
+            event.preventDefault();
+            $.ajax({
+                url: "{% url 'register' %}",
+                type: 'POST',
+                data: $(this).serialize(),
+                success: function(response) {
+                    $('#registerResult').html('<p>' + response.message + '</p>');
+                },
+                error: function(xhr) {
+                    $('#registerResult').html('<p>An error occurred.</p>');
+                }
+            });
+        });
+
+        // AJAX for searching student's enrolled courses
+        $('#searchForm').submit(function(event) {
+            event.preventDefault();
+            $.ajax({
+                url: "{% url 'search_student_courses' %}",
+                type: 'POST',
+                data: $(this).serialize(),
+                success: function(response) {
+                    if (response.courses.length > 0) {
+                        var coursesList = '<ul>';
+                        for (var i = 0; i < response.courses.length; i++) {
+                            coursesList += '<li>' + response.courses[i] + '</li>';
+                        }
+                        coursesList += '</ul>';
+                        $('#searchResult').html(coursesList);
+                    } else {
+                        $('#searchResult').html('<p>No courses found for this student.</p>');
+                    }
+                },
+                error: function(xhr) {
+                    $('#searchResult').html('<p>An error occurred.</p>');
+                }
+            });
+        });
+
+
+        function redirectToRegisteredStudents(event) {
+            event.preventDefault(); // Prevent the default form submission
+            var courseTitle = document.getElementById('course_title').value;
+            if (courseTitle) {
+                // Encode the course title to be URL safe
+                var encodedCourseTitle = encodeURIComponent(courseTitle);
+                // Redirect to the desired URL
+                window.location.href = '/registered/' + encodedCourseTitle + '/';
+            }
+        }
+
+    </script>   
+</body>
+</html>
