@@ -8,4 +8,4 @@
 - [registration_using_ajax](https://downgit.github.io/#/home?url=https://github.com/Shashank-V-H/django_lab_projects/tree/main/registration_using_ajax)
 - [template_inheritance](https://downgit.github.io/#/home?url=https://github.com/Shashank-V-H/django_lab_projects/tree/main/template_inheritance)
 ---
-- For Module 3, 2nd question we just have to perform the registration through admin panel.
+- For Module 3, 1st question we just have to perform the registration through admin panel.
