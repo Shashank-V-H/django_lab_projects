@@ -11,4 +11,3 @@
 - For Module 3, 1st question we just have to perform the registration through admin panel.
 
 ---
-If you find these projects helpful, consider starring ⭐ this repository on GitHub! Your support helps me improve and add more useful content. Plus, starring the repository will make it easy to find and reference in the future. Thank you!
